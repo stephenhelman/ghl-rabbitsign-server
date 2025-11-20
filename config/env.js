@@ -19,10 +19,9 @@ const config = {
   tenantSecretKey: requireEnv("TENANT_SECRET_KEY"),
 
   // External APIs (override in .env if needed)
-  ghlApiBaseUrl:
-    process.env.GHL_API_BASE_URL || "https://services.leadconnectorhq.com",
+  ghlApiBaseUrl: process.env.GHL_URL || "https://services.leadconnectorhq.com",
   rabbisignApiBaseUrl:
-    process.env.RABBITSIGN_API_BASE_URL || "https://api.rabbitsign.com",
+    process.env.RABBITSIGN_URL || "https://api.rabbitsign.com",
 };
 
 module.exports = { config };
