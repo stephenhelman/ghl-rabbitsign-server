@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const { config } = require("./config/env");
 const { connectDB } = require("./config/db");
+const { errorMiddleware } = require("./middlewares/errorMiddleware");
 
 const { PORT = 3001 } = process.env;
 
