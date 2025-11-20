@@ -1,1 +1,38 @@
 //configuration for client using the worker and api
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
+
+const EncryptedFieldSchema = new Schema(
+  {
+    ciphertext: { type: String, required: true },
+    iv: { type: String, required: true },
+  },
+  { _id: false }
+);
+
+const TenantSchema = new Schema(
+  {
+    _id: { type: String, required: true }, // tenantId
+    name: { type: String, required: true },
+
+    ghlLocationId: { type: String, required: true },
+
+    ghlApiKey: { type: EncryptedFieldSchema, required: true },
+    rabbitsignApiKey: { type: EncryptedFieldSchema, required: true },
+
+    defaultPipelineId: { type: String },
+    stageIds: {
+      contractSent: { type: String },
+      sellerSigned: { type: String },
+      fullySigned: { type: String },
+    },
+
+    isActive: { type: Boolean, default: true },
+  },
+  {
+    timestamps: true, // adds createdAt, updatedAt
+    collection: "tenants",
+  }
+);
+
+export const Tenant = mongoose.model("Tenant", TenantSchema);
