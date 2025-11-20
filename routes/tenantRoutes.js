@@ -9,6 +9,6 @@ const {
 const router = express.Router();
 
 // GET /tenant/:tenantId
-router.get("/tenant/:tenantId", tenantMiddleware, getCurrentTenantController);
+/* router.get("/tenant/:tenantId", tenantMiddleware, getCurrentTenantController); */
 
 module.exports = router;

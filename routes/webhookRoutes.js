@@ -7,10 +7,10 @@ const {
 
 const router = express.Router();
 
-router.post(
+/* router.post(
   "/tenant/:tenantId/webhooks/rabbitsign",
   tenantMiddleware,
   rabbitsignWebhookController
-);
+); */
 
 module.exports = router;

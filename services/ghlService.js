@@ -2,11 +2,11 @@
 
 const { HighLevel } = require("@gohighlevel/api-client");
 
-const highLevel = new HighLevel({
+/* const highLevel = new HighLevel({
   clientId: "",
   clientSecret: "",
 });
-
+ */
 //updateOpportunityStage highLevel.opportunities.updateOpportunity.
 
 //createCustomObject(signed_document) highLevel.objects.createObjectRecord
