@@ -24,4 +24,6 @@ const DocumentSchema = new Schema(
 DocumentSchema.index({ tenantId: 1, folderId: 1 });
 DocumentSchema.index({ tenantId: 1, ghlContactId: 1 });
 
-export const Document = mongoose.model("Document", DocumentSchema);
+const Document = mongoose.model("Document", DocumentSchema);
+
+module.exports = { Document };

@@ -1,5 +1,5 @@
 //configuration for client using the worker and api
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const EncryptedFieldSchema = new Schema(
@@ -35,4 +35,6 @@ const TenantSchema = new Schema(
   }
 );
 
-export const Tenant = mongoose.model("Tenant", TenantSchema);
+const Tenant = mongoose.model("Tenant", TenantSchema);
+
+module.exports = { Tenant };

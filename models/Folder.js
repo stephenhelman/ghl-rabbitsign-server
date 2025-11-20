@@ -1,7 +1,7 @@
 //entry for a kv, temporary.
 //hosts all info that used to be stored in KV
 //used to interact with rabbitsign and ghl
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const StageHistorySchema = new Schema(
@@ -62,4 +62,6 @@ const FolderSchema = new Schema(
 FolderSchema.index({ tenantId: 1, opportunityId: 1 });
 FolderSchema.index({ tenantId: 1, status: 1 });
 
-export const Folder = mongoose.model("Folder", FolderSchema);
+const Folder = mongoose.model("Folder", FolderSchema);
+
+module.exports = { Folder };

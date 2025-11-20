@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
-import { config } from "./env.js";
+const mongoose = require("mongoose");
+const { config } = require("./env.js");
 
 let isConnected = false;
 
-export const connectDB = async () => {
+const connectDB = async () => {
   if (isConnected) {
     return mongoose.connection;
   }
@@ -17,9 +17,7 @@ export const connectDB = async () => {
     });
 
     isConnected = true;
-    console.log(
-      `[db] Connected to MongoDB database "${config.mongoDbName}" in ${config.nodeEnv} mode`
-    );
+    console.log(`[db] Connected to MongoDB database in ${config.nodeEnv} mode`);
 
     return mongoose.connection;
   } catch (err) {
@@ -28,7 +26,7 @@ export const connectDB = async () => {
   }
 };
 
-export const getDB = () => {
+const getDB = () => {
   if (!isConnected) {
     throw new Error(
       "Database not connected yet. Call connectDB() during app startup."
@@ -36,3 +34,5 @@ export const getDB = () => {
   }
   return mongoose.connection;
 };
+
+module.exports = { connectDB, getDB };

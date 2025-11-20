@@ -1,11 +1,11 @@
 const express = require("express");
 const app = express();
-import { config } from "./config/env.js";
-import { connectDB } from "./config/db.js";
+const { config } = require("./config/env");
+const { connectDB } = require("./config/db");
 
 const { PORT = 3001 } = process.env;
 
-await connectDB;
+connectDB();
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);

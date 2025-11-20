@@ -1,23 +1,19 @@
 // read/process.env helpers
-import dotenv from "dotenv";
-
-dotenv.config();
-
-function requireEnv(name) {
+require("dotenv").config();
+const requireEnv = (name) => {
   const value = process.env[name];
   if (!value) {
     throw new Error(`Missing required environment variable: ${name}`);
   }
   return value;
-}
+};
 
-export const config = {
+const config = {
   nodeEnv: process.env.NODE_ENV || "development",
   port: parseInt(process.env.PORT || "4000", 10),
 
   // Mongo
-  mongoUri: requireEnv("MONGODB_URI"),
-  mongoDbName: requireEnv("MONGODB_DB_NAME"),
+  mongoUri: requireEnv("DATABASE_URI"),
 
   // Master key used to encrypt per-tenant API keys
   tenantSecretKey: requireEnv("TENANT_SECRET_KEY"),
@@ -28,3 +24,5 @@ export const config = {
   rabbisignApiBaseUrl:
     process.env.RABBITSIGN_API_BASE_URL || "https://api.rabbitsign.com",
 };
+
+module.exports = { config };

@@ -1,6 +1,5 @@
 //mapping of template ids for contracts
-
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const SenderFieldMapSchema = new Schema(
@@ -48,7 +47,6 @@ TemplateConfigSchema.index(
   { unique: false }
 );
 
-export const TemplateConfig = mongoose.model(
-  "TemplateConfig",
-  TemplateConfigSchema
-);
+const TemplateConfig = mongoose.model("TemplateConfig", TemplateConfigSchema);
+
+module.exports = { TemplateConfig };
