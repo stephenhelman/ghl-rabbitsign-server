@@ -23,6 +23,7 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "fflate": "^0.8.2",
+    "mongoose": "^8.20.0",
     "node-fetch": "^3.3.2"
   }
 }
