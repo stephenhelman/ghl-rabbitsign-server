@@ -65,7 +65,6 @@ const prefillController = async (req, res, next) => {
       date,
     };
 
-    // TODO: replace this placeholder with real mapping logic
     const rabbitPayload = {
       title: renderTitle(contractType, property),
       summary: renderSummary(templateConfig, property),
