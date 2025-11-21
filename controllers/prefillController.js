@@ -8,6 +8,8 @@ const {
   buildSenderFieldValues,
   buildRolesFromConfig,
 } = require("../utils/mappingUtil");
+const { renderTitle } = require("../utils/titleUtil");
+const { renderSummary } = require("../utils/summaryUtil");
 
 /**
  * Handle prefill requests:
@@ -19,7 +21,8 @@ const {
 const prefillController = async (req, res, next) => {
   try {
     const tenant = req.tenant;
-    const tenantId = tenant && tenant._id;
+
+    const tenantId = tenant._id;
 
     const { contractType, opportunityId, seller, buyer, property, deal } =
       req.body || {};
@@ -44,6 +47,12 @@ const prefillController = async (req, res, next) => {
       });
     }
 
+    const now = new Date();
+    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(now.getDate()).padStart(2, "0")}`;
+
     // 2) Build RabbitSign payload (later use mapping.util + title.util)
     const ctx = {
       tenantId,
@@ -53,12 +62,14 @@ const prefillController = async (req, res, next) => {
       buyer,
       property,
       deal,
+      date,
     };
 
     // TODO: replace this placeholder with real mapping logic
     const rabbitPayload = {
-      templateId: templateConfig.rabbitTemplateId,
-      title: `${contractType.toUpperCase()} - ${property && property.address}`,
+      title: renderTitle(contractType, property),
+      summary: renderSummary(templateConfig, property),
+      date: date,
       senderFieldValues: buildSenderFieldValues(templateConfig, ctx),
       roles: buildRolesFromConfig(templateConfig, ctx),
     };
@@ -66,10 +77,13 @@ const prefillController = async (req, res, next) => {
     // 3) Call RabbitSign to create folder
     const rabbitResp = await rabbitsignService.createFolderFromTemplate(
       tenant,
+      templateConfig.rabbitTemplateId,
       rabbitPayload
     );
 
-    if (!rabbitResp || !rabbitResp.ok || !rabbitResp.folderId) {
+    console.log(rabbitResp);
+
+    if (!rabbitResp || !rabbitResp.ok || !rabbitResp.data.folderId) {
       return res.status(502).json({
         ok: false,
         error:
@@ -78,17 +92,15 @@ const prefillController = async (req, res, next) => {
       });
     }
 
-    const folderId = rabbitResp.folderId;
+    const folderId = rabbitResp.data.folderId;
 
     // 4) Save folder record in Mongo
     await folderService.createFolderRecord(folderId, {
       tenantId,
       contractType,
       opportunityId,
-      propertyAddress: property && property.address,
       property,
-      sellerContactId: seller && seller.ghlContactId,
-      buyerContactId: buyer && buyer.ghlContactId,
+      seller,
       status: "sent",
     });
 

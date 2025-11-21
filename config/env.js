@@ -20,7 +20,8 @@ const config = {
 
   // External APIs (override in .env if needed)
   ghlApiBaseUrl: process.env.GHL_URL || "https://services.leadconnectorhq.com",
-  rabbiApiBaseUrl: process.env.RABBITSIGN_URL || "https://api.rabbitsign.com",
+  rabbitApiBaseUrl: process.env.RABBITSIGN_URL || "https://www.rabbitsign.com",
+  adminToken: requireEnv("ADMIN_TOKEN"),
 };
 
 module.exports = { config };

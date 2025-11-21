@@ -3,20 +3,19 @@
 // Centralized RabbitSign integration
 
 const { config } = require("../config/env");
+const { getDecryptedTenantSecrets } = require("../utils/tenantSecretsUtil");
 
-const rabbitSignAPI = async (
-  rabbitSignSecret,
-  rabbitSighKey,
-  { method, path, body = null }
-) => {
+const rabbitSignAPI = async (tenant, { method, path, body = null }) => {
   const upperMethod = method.toUpperCase();
-  const url = `${config.rabbiApiBaseUrl}${path}`;
+  const url = `${config.rabbitApiBaseUrl}${path}`;
+
+  const { rabbitSecretKey, rabbitKeyId } = getDecryptedTenantSecrets(tenant);
 
   // UTC time for header & signature
   const utc = new Date().toISOString().split(".")[0] + "Z";
 
   // Signature input: "METHOD {path} {utc} {KEY_SECRET}"
-  const input = `${upperMethod} ${path} ${utc} ${rabbitSignSecret}`;
+  const input = `${upperMethod} ${path} ${utc} ${rabbitSecretKey}`;
   const sigBuf = await crypto.subtle.digest(
     "SHA-512",
     new TextEncoder().encode(input)
@@ -28,7 +27,7 @@ const rabbitSignAPI = async (
 
   const headers = {
     "x-rabbitsign-api-time-utc": utc,
-    "x-rabbitsign-api-key-id": rabbitSighKey,
+    "x-rabbitsign-api-key-id": rabbitKeyId,
     "x-rabbitsign-api-signature": signature,
     "User-Agent": "GHL-Worker/1.0",
   };
@@ -57,10 +56,10 @@ const rabbitSignAPI = async (
   };
 };
 
-const createFolderFromTemplate = async (tenant, payload) => {
+const createFolderFromTemplate = async (tenant, templateId, payload) => {
   const path = `/api/v1/folderFromTemplate/${templateId}`;
 
-  return rabbitSignAPI(tenant.rabbitSecretKey, tenant.rabbitKeyId, {
+  return rabbitSignAPI(tenant, {
     method: "POST",
     path,
     body: payload,

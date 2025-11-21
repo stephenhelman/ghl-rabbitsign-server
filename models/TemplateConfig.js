@@ -29,8 +29,6 @@ const TemplateConfigSchema = new mongoose.Schema(
     rabbitTemplateId: { type: String, required: true },
     displayName: { type: String },
 
-    titleTemplate: { type: String },
-
     senderFieldMap: { type: [SenderFieldMapSchema], default: [] },
     roles: { type: [SignerSchema], default: [] },
   },

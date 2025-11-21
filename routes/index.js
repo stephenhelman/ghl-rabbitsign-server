@@ -1,16 +1,15 @@
-// attach all routers
-// backend/src/routes/index.js
 const prefillRoutes = require("./prefillRoutes");
-const tenantRoutes = require("./tenantRoutes");
-const webhookRoutes = require("./webhookRoutes");
+/* const tenantRoutes = require("./tenant.routes");
+const webhookRoutes = require("./webhook.routes"); */
+const adminRoutes = require("./adminRoutes");
+const adminTemplateRoutes = require("./adminTemplateRoutes");
 
-/**
- * Attach all route modules to the Express app.
- */
 const registerRoutes = (app) => {
   app.use(prefillRoutes);
-  /*   app.use(tenantRoutes);
+  /* app.use(tenantRoutes);
   app.use(webhookRoutes); */
+  app.use(adminRoutes);
+  app.use(adminTemplateRoutes);
 };
 
 module.exports = {
