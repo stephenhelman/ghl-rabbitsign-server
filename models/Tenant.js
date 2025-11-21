@@ -1,8 +1,7 @@
 //configuration for client using the worker and api
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const EncryptedFieldSchema = new Schema(
+const EncryptedFieldSchema = new mongoose.Schema(
   {
     ciphertext: { type: String, required: true },
     iv: { type: String, required: true },
@@ -10,7 +9,7 @@ const EncryptedFieldSchema = new Schema(
   { _id: false }
 );
 
-const TenantSchema = new Schema(
+const TenantSchema = new mongoose.Schema(
   {
     _id: { type: String, required: true }, // tenantId
     name: { type: String, required: true },
@@ -18,7 +17,8 @@ const TenantSchema = new Schema(
     ghlLocationId: { type: String, required: true },
 
     ghlApiKey: { type: EncryptedFieldSchema, required: true },
-    rabbitsignApiKey: { type: EncryptedFieldSchema, required: true },
+    rabbitSecretKey: { type: EncryptedFieldSchema, required: true },
+    rabbitKeyId: { type: EncryptedFieldSchema, required: true },
 
     defaultPipelineId: { type: String },
     stageIds: {
@@ -37,4 +37,4 @@ const TenantSchema = new Schema(
 
 const Tenant = mongoose.model("Tenant", TenantSchema);
 
-module.exports = { Tenant };
+module.exports = Tenant;

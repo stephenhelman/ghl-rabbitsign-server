@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const DocumentSchema = new Schema(
+const DocumentSchema = new mongoose.Schema(
   {
     tenantId: { type: String, ref: "Tenant", required: true },
     folderId: { type: String, ref: "Folder", required: true },
@@ -26,4 +25,4 @@ DocumentSchema.index({ tenantId: 1, ghlContactId: 1 });
 
 const Document = mongoose.model("Document", DocumentSchema);
 
-module.exports = { Document };
+module.exports = Document;

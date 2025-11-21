@@ -1,26 +1,24 @@
 //mapping of template ids for contracts
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const SenderFieldMapSchema = new Schema(
+const SenderFieldMapSchema = new mongoose.Schema(
   {
     fieldId: { type: String, required: true },
     source: { type: String, required: true }, // e.g. "seller.fullName"
-    format: { type: String }, // "currency", "date", etc.
   },
   { _id: false }
 );
 
-const SignerSchema = new Schema(
+const SignerSchema = new mongoose.Schema(
   {
-    role: { type: String, required: true }, // "seller", "buyer", etc.
+    roleKey: { type: String, required: true }, // Seller, Buyer, Etc
     emailSource: { type: String, required: true }, // e.g. "seller.email"
     nameSource: { type: String, required: true }, // e.g. "seller.fullName"
   },
   { _id: false }
 );
 
-const TemplateConfigSchema = new Schema(
+const TemplateConfigSchema = new mongoose.Schema(
   {
     tenantId: { type: String, ref: "Tenant", required: true },
 
@@ -34,7 +32,7 @@ const TemplateConfigSchema = new Schema(
     titleTemplate: { type: String },
 
     senderFieldMap: { type: [SenderFieldMapSchema], default: [] },
-    signers: { type: [SignerSchema], default: [] },
+    roles: { type: [SignerSchema], default: [] },
   },
   {
     timestamps: true,
@@ -49,4 +47,4 @@ TemplateConfigSchema.index(
 
 const TemplateConfig = mongoose.model("TemplateConfig", TemplateConfigSchema);
 
-module.exports = { TemplateConfig };
+module.exports = TemplateConfig;

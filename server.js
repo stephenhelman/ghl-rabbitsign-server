@@ -28,7 +28,7 @@ const createApp = () => {
   });
 
   // Register feature routes
-  /*   registerRoutes(app); */
+  registerRoutes(app);
 
   // Global error handler (must be last)
   app.use(errorMiddleware);
