@@ -4,6 +4,10 @@
 const templateConfigService = require("../services/templateConfigService");
 const folderService = require("../services/folderService");
 const rabbitsignService = require("../services/rabbitsignService");
+const {
+  buildSenderFieldValues,
+  buildRolesFromConfig,
+} = require("../utils/mappingUtil");
 
 /**
  * Handle prefill requests:
@@ -14,7 +18,7 @@ const rabbitsignService = require("../services/rabbitsignService");
  */
 const prefillController = async (req, res, next) => {
   try {
-    const tenant = req.tenant; // from tenantMiddleware
+    const tenant = req.tenant;
     const tenantId = tenant && tenant._id;
 
     const { contractType, opportunityId, seller, buyer, property, deal } =
@@ -54,12 +58,9 @@ const prefillController = async (req, res, next) => {
     // TODO: replace this placeholder with real mapping logic
     const rabbitPayload = {
       templateId: templateConfig.rabbitTemplateId,
-      title:
-        templateConfig.displayName ||
-        `${contractType.toUpperCase()} - ${property && property.address}`,
-      senderFieldValues: [],
-      signers: [],
-      ctx,
+      title: `${contractType.toUpperCase()} - ${property && property.address}`,
+      senderFieldValues: buildSenderFieldValues(templateConfig, ctx),
+      roles: buildRolesFromConfig(templateConfig, ctx),
     };
 
     // 3) Call RabbitSign to create folder

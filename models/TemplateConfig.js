@@ -6,14 +6,13 @@ const SenderFieldMapSchema = new Schema(
   {
     fieldId: { type: String, required: true },
     source: { type: String, required: true }, // e.g. "seller.fullName"
-    format: { type: String }, // "currency", "date", etc.
   },
   { _id: false }
 );
 
 const SignerSchema = new Schema(
   {
-    role: { type: String, required: true }, // "seller", "buyer", etc.
+    roleKey: { type: String, required: true }, // Seller, Buyer, Etc
     emailSource: { type: String, required: true }, // e.g. "seller.email"
     nameSource: { type: String, required: true }, // e.g. "seller.fullName"
   },
@@ -34,7 +33,7 @@ const TemplateConfigSchema = new Schema(
     titleTemplate: { type: String },
 
     senderFieldMap: { type: [SenderFieldMapSchema], default: [] },
-    signers: { type: [SignerSchema], default: [] },
+    roles: { type: [SignerSchema], default: [] },
   },
   {
     timestamps: true,

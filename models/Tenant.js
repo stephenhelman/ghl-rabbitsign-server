@@ -18,7 +18,8 @@ const TenantSchema = new Schema(
     ghlLocationId: { type: String, required: true },
 
     ghlApiKey: { type: EncryptedFieldSchema, required: true },
-    rabbitsignApiKey: { type: EncryptedFieldSchema, required: true },
+    rabbitSecretKey: { type: EncryptedFieldSchema, required: true },
+    rabbitKeyId: { type: EncryptedFieldSchema, required: true },
 
     defaultPipelineId: { type: String },
     stageIds: {

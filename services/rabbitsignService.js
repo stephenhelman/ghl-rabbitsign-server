@@ -4,38 +4,80 @@
 
 const { config } = require("../config/env");
 
-/**
- * Build basic headers for RabbitSign.
- * You'll likely need an API key/token per tenant.
- */
-const buildRabbitHeaders = (tenant) => {
+const rabbitSignAPI = async (
+  rabbitSignSecret,
+  rabbitSighKey,
+  { method, path, body = null }
+) => {
+  const upperMethod = method.toUpperCase();
+  const url = `${config.rabbiApiBaseUrl}${path}`;
+
+  // UTC time for header & signature
+  const utc = new Date().toISOString().split(".")[0] + "Z";
+
+  // Signature input: "METHOD {path} {utc} {KEY_SECRET}"
+  const input = `${upperMethod} ${path} ${utc} ${rabbitSignSecret}`;
+  const sigBuf = await crypto.subtle.digest(
+    "SHA-512",
+    new TextEncoder().encode(input)
+  );
+  const signature = [...new Uint8Array(sigBuf)]
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase();
+
+  const headers = {
+    "x-rabbitsign-api-time-utc": utc,
+    "x-rabbitsign-api-key-id": rabbitSighKey,
+    "x-rabbitsign-api-signature": signature,
+    "User-Agent": "GHL-Worker/1.0",
+  };
+
+  let fetchOptions = { method: upperMethod, headers };
+
+  if (body !== undefined && body !== null) {
+    headers["Content-Type"] = "application/json";
+    fetchOptions.body = JSON.stringify(body);
+  }
+
+  const resp = await fetch(url, fetchOptions);
+  const data = await resp.json().catch((err) => ("rabbit sign API error", err));
+
+  console.log("Rabbit Sign folder details", {
+    path,
+    status: resp.status,
+    ok: resp.ok,
+    data,
+  });
+
   return {
-    Authorization: `Bearer ${tenant.decryptedRabbitApiKey || ""}`,
-    "Content-Type": "application/json",
+    ok: resp.ok,
+    status: resp.status,
+    data,
   };
 };
 
 const createFolderFromTemplate = async (tenant, payload) => {
-  // TODO: implement real RabbitSign API call here
-  // Example:
-  // const url = `${config.rabbisignApiBaseUrl}/folders`;
-  // await fetch(url, { method: "POST", headers: buildRabbitHeaders(tenant), body: JSON.stringify(payload) });
+  const path = `/api/v1/folderFromTemplate/${templateId}`;
 
-  return {
-    ok: true,
-    message: "createFolderFromTemplate not implemented yet",
-    payload,
-  };
+  return rabbitSignAPI(tenant.rabbitSecretKey, tenant.rabbitKeyId, {
+    method: "POST",
+    path,
+    body: payload,
+  });
 };
 
 const getFolderDownloadUrl = async (tenant, folderId) => {
-  // TODO: implement RabbitSign "get folder" or "download" endpoint
+  if (!folderId) {
+    throw new Error("folderId is required to fetch folder details");
+  }
 
-  return {
-    ok: false,
-    message: "getFolderDownloadUrl not implemented yet",
-    folderId,
-  };
+  const path = `/api/v1/folder/${folderId}`;
+
+  return rabbitSignAPI(tenant.rabbitSecretKey, tenant.rabbitKeyId, {
+    method: "GET",
+    path,
+  });
 };
 
 module.exports = {
