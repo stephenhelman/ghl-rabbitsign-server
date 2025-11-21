@@ -29,7 +29,7 @@ const buildSenderFieldValues = (templateConfig, ctx) => {
 };
 
 const buildRolesFromConfig = (templateConfig, ctx) => {
-  const signersCfg = (templateConfig && templateConfig.signers) || [];
+  const signersCfg = (templateConfig && templateConfig.roles) || [];
   const roles = {};
 
   signersCfg.forEach((s) => {

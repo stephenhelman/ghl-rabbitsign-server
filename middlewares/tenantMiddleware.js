@@ -11,8 +11,8 @@ const tenantMiddleware = async (req, res, next) => {
       });
     }
 
-    const tenant = await tenantService.getTenantById(tenantId);
-
+    const tenantFromDB = await tenantService.getTenantById(tenantId);
+    const tenant = tenantFromDB[0];
     if (!tenant) {
       return res.status(404).json({
         ok: false,

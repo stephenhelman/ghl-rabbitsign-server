@@ -2,24 +2,6 @@
 const { encryptSecret } = require("../utils/cryptoUtil");
 const tenantService = require("../services/tenantService");
 
-/**
- * POST /admin/tenants
- * Body:
- * {
- *   "tenantId": "operation_profit",
- *   "name": "Operation Profit",
- *   "ghlLocationId": "d5rQtBqw511q7isWJLCG",
- *   "ghlApiKey": "RAW_GHL_API_KEY",
- *   "rabbitSecretKey": "RAW_RABBITSIGN_SECRET",
- *   "rabbitKeyId": "RAW_RABBITSIGN_KEY_ID",
- *   "defaultPipelineId": "optional",
- *   "stageIds": {
- *     "contractSent": "stage_id_here",
- *     "sellerSigned": "stage_id_here",
- *     "fullySigned": "stage_id_here"
- *   }
- * }
- */
 const createOrUpdateTenantAdminController = async (req, res, next) => {
   try {
     const {
