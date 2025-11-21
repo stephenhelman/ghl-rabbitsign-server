@@ -22,7 +22,6 @@ const TenantSchema = new mongoose.Schema(
 
     defaultPipelineId: { type: String },
     stageIds: {
-      contractSent: { type: String },
       sellerSigned: { type: String },
       fullySigned: { type: String },
     },
