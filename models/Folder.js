@@ -2,9 +2,8 @@
 //hosts all info that used to be stored in KV
 //used to interact with rabbitsign and ghl
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const StageHistorySchema = new Schema(
+const StageHistorySchema = new mongoose.Schema(
   {
     status: { type: String, required: true },
     timestamp: { type: Date, default: Date.now },
@@ -13,7 +12,7 @@ const StageHistorySchema = new Schema(
   { _id: false }
 );
 
-const PropertySchema = new Schema(
+const PropertySchema = new mongoose.Schema(
   {
     address: { type: String },
     city: { type: String },
@@ -23,7 +22,7 @@ const PropertySchema = new Schema(
   { _id: false }
 );
 
-const FlagsSchema = new Schema(
+const FlagsSchema = new mongoose.Schema(
   {
     stageSignedUpdated: { type: Boolean, default: false },
     stageAllSignedUpdated: { type: Boolean, default: false },
@@ -32,7 +31,7 @@ const FlagsSchema = new Schema(
   { _id: false }
 );
 
-const FolderSchema = new Schema(
+const FolderSchema = new mongoose.Schema(
   {
     _id: { type: String, required: true }, // RabbitSign folderId
 
@@ -64,4 +63,4 @@ FolderSchema.index({ tenantId: 1, status: 1 });
 
 const Folder = mongoose.model("Folder", FolderSchema);
 
-module.exports = { Folder };
+module.exports = Folder;

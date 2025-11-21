@@ -6,7 +6,7 @@ const Tenant = require("../models/Tenant");
  */
 const getTenantById = async (tenantId) => {
   if (!tenantId) return null;
-  return Tenant.findById(tenantId).exec();
+  return Tenant.find({ tenantId: tenantId }).exec();
 };
 
 /**

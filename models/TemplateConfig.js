@@ -1,8 +1,7 @@
 //mapping of template ids for contracts
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const SenderFieldMapSchema = new Schema(
+const SenderFieldMapSchema = new mongoose.Schema(
   {
     fieldId: { type: String, required: true },
     source: { type: String, required: true }, // e.g. "seller.fullName"
@@ -10,7 +9,7 @@ const SenderFieldMapSchema = new Schema(
   { _id: false }
 );
 
-const SignerSchema = new Schema(
+const SignerSchema = new mongoose.Schema(
   {
     roleKey: { type: String, required: true }, // Seller, Buyer, Etc
     emailSource: { type: String, required: true }, // e.g. "seller.email"
@@ -19,7 +18,7 @@ const SignerSchema = new Schema(
   { _id: false }
 );
 
-const TemplateConfigSchema = new Schema(
+const TemplateConfigSchema = new mongoose.Schema(
   {
     tenantId: { type: String, ref: "Tenant", required: true },
 
@@ -48,4 +47,4 @@ TemplateConfigSchema.index(
 
 const TemplateConfig = mongoose.model("TemplateConfig", TemplateConfigSchema);
 
-module.exports = { TemplateConfig };
+module.exports = TemplateConfig;

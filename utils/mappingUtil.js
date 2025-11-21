@@ -53,7 +53,6 @@ const buildRolesFromConfig = (templateConfig, ctx) => {
 
 module.exports = {
   getValueByPath,
-  applyFormat,
   buildSenderFieldValues,
   buildRolesFromConfig,
 };
