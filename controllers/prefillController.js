@@ -81,8 +81,6 @@ const prefillController = async (req, res, next) => {
       rabbitPayload
     );
 
-    console.log(rabbitResp);
-
     if (!rabbitResp || !rabbitResp.ok || !rabbitResp.data.folderId) {
       return res.status(502).json({
         ok: false,

@@ -14,10 +14,20 @@ const StageHistorySchema = new mongoose.Schema(
 
 const PropertySchema = new mongoose.Schema(
   {
-    address: { type: String },
-    city: { type: String },
-    state: { type: String },
-    zip: { type: String },
+    propertyAddress: { type: String },
+    propertyCity: { type: String },
+    propertyState: { type: String },
+    propertyZip: { type: String },
+  },
+  { _id: false }
+);
+
+const SellerSchema = new mongoose.Schema(
+  {
+    ghlContactId: { type: String },
+    fullName: { type: String },
+    email: { type: String },
+    phone: { type: String },
   },
   { _id: false }
 );
@@ -43,8 +53,7 @@ const FolderSchema = new mongoose.Schema(
     propertyAddress: { type: String },
     property: { type: PropertySchema, default: {} },
 
-    sellerContactId: { type: String },
-    buyerContactId: { type: String },
+    seller: { type: SellerSchema, default: {} },
 
     status: { type: String, default: "sent" },
 
