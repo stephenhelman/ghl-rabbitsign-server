@@ -39,6 +39,7 @@ const rabbitsignWebhookController = async (req, res, next) => {
     }
     //if signer email (webhook payload) == seller email(folder details) => move to contract signed
     if (payload.signerEmail === folder.sellerEmail) {
+      console.log("hello from seller signing");
       const ghlResponse = await ghlService.updateOpportunityStage(
         tenant,
         folder.opportunityId,
@@ -50,6 +51,7 @@ const rabbitsignWebhookController = async (req, res, next) => {
 
     //if signer email (webhook payload) === buyer.email( folder details) => move to dispo => create signed doc => relate signed doc to contact and opp => upload pdf to signed doc
     if (payload.signerEmail === folder.buyerEmail) {
+      console.log("hello from buyer signing");
       const ghlResponse = await ghlService.updateOpportunityStage(
         tenant,
         folder.opportunityId,
