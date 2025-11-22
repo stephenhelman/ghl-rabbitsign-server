@@ -3,27 +3,11 @@
 //used to interact with rabbitsign and ghl
 const mongoose = require("mongoose");
 
-const StageHistorySchema = new mongoose.Schema(
-  {
-    status: { type: String, required: true },
-    timestamp: { type: Date, default: Date.now },
-    meta: { type: mongoose.Schema.Types.Mixed },
-  },
-  { _id: false }
-);
-
-const FlagsSchema = new mongoose.Schema(
-  {
-    stageSignedUpdated: { type: Boolean, default: false },
-    stageAllSignedUpdated: { type: Boolean, default: false },
-    signedDocCreated: { type: Boolean, default: false },
-  },
-  { _id: false }
-);
-
-const ContractSchema = new mongoose.Schema({
-  contractType: { type: String, required: true },
-  downloadUrl: { type: String, default: "" },
+const SignerSchema = new mongoose.Schema({
+  role: { type: String, required: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  contactId: { type: String },
 });
 
 const FolderSchema = new mongoose.Schema(
@@ -34,14 +18,7 @@ const FolderSchema = new mongoose.Schema(
 
     opportunityId: { type: String, required: true },
 
-    sellerEmail: { type: String },
-    buyerEmail: { type: String },
-
-    status: { type: String, default: "sent" },
-
-    stageHistory: { type: [StageHistorySchema], default: [] },
-
-    flags: { type: FlagsSchema, default: () => ({}) },
+    signers: { type: [SignerSchema], required: true },
   },
   {
     timestamps: true,

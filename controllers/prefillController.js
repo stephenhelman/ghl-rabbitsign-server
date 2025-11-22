@@ -7,6 +7,7 @@ const rabbitsignService = require("../services/rabbitsignService");
 const {
   buildSenderFieldValues,
   buildRolesFromConfig,
+  buildSignersObject,
 } = require("../utils/mappingUtil");
 const { renderTitle } = require("../utils/titleUtil");
 const { renderSummary } = require("../utils/summaryUtil");
@@ -90,16 +91,15 @@ const prefillController = async (req, res, next) => {
     }
 
     const folderId = rabbitResp.data.folderId;
+    const sellerObject = buildSignersObject(seller, "Seller");
+    const buyerObject = buildSignersObject(buyer, "Buyer");
+    const signers = [sellerObject, buyerObject];
 
     // 4) Save folder record in Mongo
     await folderService.createFolderRecord(folderId, {
       tenantId,
       opportunityId,
-      propertyAddress: property.propertyFullAddress,
-      sellerEmail: seller.email,
-      buyerEmail: buyer.email,
-
-      status: "sent",
+      signers,
     });
 
     return res.status(200).json({

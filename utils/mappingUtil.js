@@ -47,8 +47,18 @@ const buildRolesFromConfig = (templateConfig, ctx) => {
   return roles;
 };
 
+const buildSignersObject = (contact, role) => {
+  return {
+    role,
+    name: contact.fullName,
+    email: contact.email,
+    contactId: contact.ghlContactId ? contact.ghlContactId : "",
+  };
+};
+
 module.exports = {
   getValueByPath,
   buildSenderFieldValues,
   buildRolesFromConfig,
+  buildSignersObject,
 };

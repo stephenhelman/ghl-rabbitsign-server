@@ -4,7 +4,6 @@
 const folderService = require("../services/folderService");
 const documentService = require("../services/documentService");
 const ghlService = require("../services/ghlService");
-const rabbitsignService = require("../services/rabbitsignService");
 
 /**
  * Handle RabbitSign webhooks:
@@ -57,8 +56,17 @@ const rabbitsignWebhookController = async (req, res, next) => {
         tenant.stageIds.fullySigned
       );
       //create a Document with necessary information
+      const documentResponse = await documentService.createDocumentRecord({
+        tenantId,
+        folderId,
+        relations: {
+          contactId: folder.signers.seller.contactId,
+          opportunityId: ghlResponse.data.id,
+        },
+      });
 
-      console.log(ghlResponse.data);
+      console.log("GHL Response", ghlResponse.data);
+      console.log("Document Response", documentResponse.data);
     }
     // eslint-disable-next-line no-console
     console.log("[webhook] Rabbitsign payload received", {

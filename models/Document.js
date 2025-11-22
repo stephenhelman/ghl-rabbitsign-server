@@ -5,11 +5,17 @@ const RelationsSchema = new mongoose.Schema({
   opportunityId: { type: String, required: true },
 });
 
+const SignersSchema = new mongoose.Schema({
+  seller: { type: String, required: true },
+  buyer: { type: String, required: true },
+});
+
 const DocumentSchema = new mongoose.Schema(
   {
     tenantId: { type: String, ref: "Tenant", required: true },
     folderId: { type: String, ref: "Folder", required: true },
     relations: { type: RelationsSchema, required: true },
+    signers: { type: SignersSchema, required: true },
     status: { type: String, default: "pending" },
   },
   {
