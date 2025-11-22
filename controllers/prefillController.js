@@ -94,10 +94,11 @@ const prefillController = async (req, res, next) => {
     // 4) Save folder record in Mongo
     await folderService.createFolderRecord(folderId, {
       tenantId,
-      contractType,
       opportunityId,
-      property,
-      seller,
+      propertyAddress: property.propertyFullAddress,
+      sellerEmail: seller.email,
+      buyerEmail: buyer.email,
+
       status: "sent",
     });
 

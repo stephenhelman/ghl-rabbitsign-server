@@ -1,7 +1,3 @@
-//apply mapping config → senderFieldValues
-/**
- * Safely read a nested value from an object using a path like "seller.fullName".
- */
 const getValueByPath = (obj, path) => {
   if (!obj || !path) return undefined;
 

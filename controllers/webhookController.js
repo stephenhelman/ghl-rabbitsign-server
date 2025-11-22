@@ -21,8 +21,7 @@ const rabbitsignWebhookController = async (req, res, next) => {
 
     const payload = req.body || {};
 
-    // TODO: adjust based on actual RabbitSign webhook format
-    const folderId = payload.folderId || payload.folder_id;
+    const folderId = payload.folderId;
 
     if (!folderId) {
       return res.status(400).json({
@@ -39,11 +38,28 @@ const rabbitsignWebhookController = async (req, res, next) => {
         error: `No folder record found for folderId "${folderId}"`,
       });
     }
+    //if signer email (webhook payload) == seller email(folder details) => move to contract signed
+    if (payload.signerEmail === folder.sellerEmail) {
+      const ghlResponse = await ghlService.updateOpportunityStage(
+        tenant,
+        folder.opportunityId,
+        tenant.stageIds.sellerSigned
+      );
 
-    // TODO: inspect payload status to decide what to do
-    // e.g., if (payload.status === "COMPLETED") { ... }
+      console.log(ghlResponse.data);
+    }
 
-    // Placeholder: just log and return 200 for now
+    //if signer email (webhook payload) === buyer.email( folder details) => move to dispo => create signed doc => relate signed doc to contact and opp => upload pdf to signed doc
+    if (payload.signerEmail === folder.buyerEmail) {
+      const ghlResponse = await ghlService.updateOpportunityStage(
+        tenant,
+        folder.opportunityId,
+        tenant.stageIds.fullySigned
+      );
+      //create a Document with necessary information
+
+      console.log(ghlResponse.data);
+    }
     // eslint-disable-next-line no-console
     console.log("[webhook] Rabbitsign payload received", {
       tenantId,

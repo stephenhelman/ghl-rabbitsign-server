@@ -12,26 +12,6 @@ const StageHistorySchema = new mongoose.Schema(
   { _id: false }
 );
 
-const PropertySchema = new mongoose.Schema(
-  {
-    propertyAddress: { type: String },
-    propertyCity: { type: String },
-    propertyState: { type: String },
-    propertyZip: { type: String },
-  },
-  { _id: false }
-);
-
-const SellerSchema = new mongoose.Schema(
-  {
-    ghlContactId: { type: String },
-    fullName: { type: String },
-    email: { type: String },
-    phone: { type: String },
-  },
-  { _id: false }
-);
-
 const FlagsSchema = new mongoose.Schema(
   {
     stageSignedUpdated: { type: Boolean, default: false },
@@ -41,19 +21,21 @@ const FlagsSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const ContractSchema = new mongoose.Schema({
+  contractType: { type: String, required: true },
+  downloadUrl: { type: String, default: "" },
+});
+
 const FolderSchema = new mongoose.Schema(
   {
     _id: { type: String, required: true }, // RabbitSign folderId
 
     tenantId: { type: String, ref: "Tenant", required: true },
 
-    contractType: { type: String, required: true },
     opportunityId: { type: String, required: true },
 
-    propertyAddress: { type: String },
-    property: { type: PropertySchema, default: {} },
-
-    seller: { type: SellerSchema, default: {} },
+    sellerEmail: { type: String },
+    buyerEmail: { type: String },
 
     status: { type: String, default: "sent" },
 

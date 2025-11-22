@@ -1,18 +1,16 @@
 const mongoose = require("mongoose");
 
+const RelationsSchema = new mongoose.Schema({
+  contactId: { type: String, required: true },
+  opportunityId: { type: String, required: true },
+});
+
 const DocumentSchema = new mongoose.Schema(
   {
     tenantId: { type: String, ref: "Tenant", required: true },
     folderId: { type: String, ref: "Folder", required: true },
-
-    ghlContactId: { type: String },
-    ghlCustomFieldId: { type: String },
-    ghlFileUrl: { type: String },
-
-    ghlCustomObjectRecordId: { type: String },
-
-    type: { type: String, default: "signed_contract" },
-    status: { type: String, default: "uploaded" },
+    relations: { type: RelationsSchema, required: true },
+    status: { type: String, default: "pending" },
   },
   {
     timestamps: true,
