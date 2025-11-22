@@ -30,6 +30,7 @@ const rabbitsignWebhookController = async (req, res, next) => {
     }
 
     const folder = await folderService.getFolderById(tenantId, folderId);
+    console.log(folder);
 
     if (!folder) {
       return res.status(404).json({
@@ -38,7 +39,7 @@ const rabbitsignWebhookController = async (req, res, next) => {
       });
     }
     //if signer email (webhook payload) == seller email(folder details) => move to contract signed
-    if (payload.signerEmail === folder.sellerEmail) {
+    if (payload.signerEmail === folder.signers[0].email) {
       console.log("hello from seller signing");
       const ghlResponse = await ghlService.updateOpportunityStage(
         tenant,
@@ -50,7 +51,7 @@ const rabbitsignWebhookController = async (req, res, next) => {
     }
 
     //if signer email (webhook payload) === buyer.email( folder details) => move to dispo => create signed doc => relate signed doc to contact and opp => upload pdf to signed doc
-    if (payload.signerEmail === folder.buyerEmail) {
+    if (payload.signerEmail === folder.signers[1].email) {
       console.log("hello from buyer signing");
       const ghlResponse = await ghlService.updateOpportunityStage(
         tenant,
@@ -62,7 +63,7 @@ const rabbitsignWebhookController = async (req, res, next) => {
         tenantId,
         folderId,
         relations: {
-          contactId: folder.signers.seller.contactId,
+          contactId: folder.signers[0].contactId,
           opportunityId: ghlResponse.data.id,
         },
       });
