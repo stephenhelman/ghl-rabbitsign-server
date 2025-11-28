@@ -9,6 +9,11 @@ const SenderFieldMapSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const CtxMappingEntrySchema = new mongoose.Schema({
+  ctxPath: { type: String, required: true },
+  ghlPath: { type: String, required: true },
+});
+
 const SignerSchema = new mongoose.Schema(
   {
     roleKey: { type: String, required: true }, // Seller, Buyer, Etc
@@ -31,6 +36,8 @@ const TemplateConfigSchema = new mongoose.Schema(
 
     senderFieldMap: { type: [SenderFieldMapSchema], default: [] },
     roles: { type: [SignerSchema], default: [] },
+
+    ctxMapping: { type: [CtxMappingEntrySchema], default: [] },
   },
   {
     timestamps: true,

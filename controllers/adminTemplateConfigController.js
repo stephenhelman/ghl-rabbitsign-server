@@ -53,6 +53,7 @@ const createTemplateConfigAdminController = async (req, res, next) => {
       version,
       senderFieldMap,
       roles,
+      ctxMapping,
     } = req.body || {};
 
     if (!tenantId || !contractType || !rabbitTemplateId) {
@@ -71,6 +72,7 @@ const createTemplateConfigAdminController = async (req, res, next) => {
       version: version || 1,
       senderFieldMap: senderFieldMap || [],
       roles: roles || [],
+      ctxMapping: ctxMapping,
       isActive: true,
     });
 

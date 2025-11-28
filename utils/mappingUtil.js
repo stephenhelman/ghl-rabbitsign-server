@@ -1,3 +1,25 @@
+// utils/mapping.util.js
+const { getByPath, setByPath } = require("./pathUtil");
+
+const buildCtxFromMapping = (raw, ctxMappingArray, date) => {
+  const ctx = {};
+
+  if (!ctxMappingArray || !Array.isArray(ctxMappingArray)) return ctx;
+
+  ctxMappingArray.forEach((entry) => {
+    if (!entry) return;
+    const { ctxPath, ghlPath } = entry;
+    if (!ctxPath || !ghlPath) return;
+
+    const value = getByPath(raw, ghlPath);
+    if (typeof value !== "undefined") {
+      setByPath(ctx, ctxPath, value);
+    }
+  });
+
+  return { ...ctx, date };
+};
+
 const getValueByPath = (obj, path) => {
   if (!obj || !path) return undefined;
 
@@ -8,7 +30,6 @@ const getValueByPath = (obj, path) => {
     return undefined;
   }, obj);
 };
-
 /**
  * Build RabbitSign senderFieldValues from a templateConfig + ctx object.
  * Expects templateConfig.senderFieldMap = [{ fieldId, source, format }, ...]
@@ -61,4 +82,5 @@ module.exports = {
   buildSenderFieldValues,
   buildRolesFromConfig,
   buildSignersObject,
+  buildCtxFromMapping,
 };

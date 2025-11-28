@@ -1,6 +1,3 @@
-//prefill folders
-//get folder details
-
 const templateConfigService = require("../services/templateConfigService");
 const folderService = require("../services/folderService");
 const rabbitsignService = require("../services/rabbitsignService");
@@ -8,6 +5,7 @@ const {
   buildSenderFieldValues,
   buildRolesFromConfig,
   buildSignersObject,
+  buildCtxFromMapping,
 } = require("../utils/mappingUtil");
 const { renderTitle } = require("../utils/titleUtil");
 const { renderSummary } = require("../utils/summaryUtil");
@@ -22,18 +20,8 @@ const { renderSummary } = require("../utils/summaryUtil");
 const prefillController = async (req, res, next) => {
   try {
     const tenant = req.tenant;
-
     const tenantId = tenant._id;
-
-    const { contractType, opportunityId, seller, buyer, property, deal } =
-      req.body || {};
-
-    if (!contractType || !opportunityId) {
-      return res.status(400).json({
-        ok: false,
-        error: "contractType and opportunityId are required",
-      });
-    }
+    const contractType = req.body.contractTypeFromPath;
 
     // 1) Load template config
     const templateConfig = await templateConfigService.getActiveTemplateConfig(
@@ -54,25 +42,16 @@ const prefillController = async (req, res, next) => {
       "0"
     )}-${String(now.getDate()).padStart(2, "0")}`;
 
-    // 2) Build RabbitSign payload (later use mapping.util + title.util)
-    const ctx = {
-      tenantId,
-      contractType,
-      opportunityId,
-      seller,
-      buyer,
-      property,
-      deal,
-      date,
-    };
+    const ctx = buildCtxFromMapping(req.body, templateConfig.ctxMapping, date);
 
     const rabbitPayload = {
-      title: renderTitle(contractType, property),
-      summary: renderSummary(templateConfig, property),
+      title: renderTitle(contractType, ctx.property),
+      summary: renderSummary(templateConfig, ctx.property),
       date: date,
       senderFieldValues: buildSenderFieldValues(templateConfig, ctx),
       roles: buildRolesFromConfig(templateConfig, ctx),
     };
+    console.log(rabbitPayload);
 
     // 3) Call RabbitSign to create folder
     const rabbitResp = await rabbitsignService.createFolderFromTemplate(
@@ -91,14 +70,14 @@ const prefillController = async (req, res, next) => {
     }
 
     const folderId = rabbitResp.data.folderId;
-    const sellerObject = buildSignersObject(seller, "Seller");
-    const buyerObject = buildSignersObject(buyer, "Buyer");
+    const sellerObject = buildSignersObject(ctx.seller, "Seller");
+    const buyerObject = buildSignersObject(ctx.buyer, "Buyer");
     const signers = [sellerObject, buyerObject];
 
     // 4) Save folder record in Mongo
     await folderService.createFolderRecord(folderId, {
       tenantId,
-      opportunityId,
+      opportunityId: ctx.opportunityId,
       signers,
     });
 
