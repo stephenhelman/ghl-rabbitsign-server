@@ -73,7 +73,7 @@ const getFolderDownloadUrl = async (tenant, folderId) => {
 
   const path = `/api/v1/folder/${folderId}`;
 
-  return rabbitSignAPI(tenant.rabbitSecretKey, tenant.rabbitKeyId, {
+  return rabbitSignAPI(tenant, {
     method: "GET",
     path,
   });

@@ -12,7 +12,7 @@ const updateOpportunityStage = async (tenant, opportunityId, stageId) => {
       pipelineStageId: stageId,
     }
   );
-  const data = await resp.json().catch((err) => ("rabbit sign API error", err));
+  const data = await resp.json().catch((err) => ("GHL API Error", err));
 
   console.log("GHL Response", {
     path,
@@ -28,8 +28,6 @@ const updateOpportunityStage = async (tenant, opportunityId, stageId) => {
   };
 };
 
-//createCustomObject(signed_document) highLevel.objects.createObjectRecord
-
-//relateCustomObject(signed_document => contact && signed_document => opportunity) highLevel.associations.createRelation
-
-module.exports = { updateOpportunityStage };
+module.exports = {
+  updateOpportunityStage,
+};

@@ -1,14 +1,22 @@
 const mongoose = require("mongoose");
 
-const RelationsSchema = new mongoose.Schema({
-  contactId: { type: String, required: true },
-  opportunityId: { type: String, required: true },
-});
+const RelationsSchema = new mongoose.Schema(
+  {
+    contactId: { type: String, required: true },
+    opportunityId: { type: String, required: true },
+  },
+  { _id: false }
+);
 
-const SignersSchema = new mongoose.Schema({
-  seller: { type: String, required: true },
-  buyer: { type: String, required: true },
-});
+const SignersSchema = new mongoose.Schema(
+  {
+    seller: { type: String, required: true },
+    buyer: { type: String, required: true },
+  },
+  {
+    _id: false,
+  }
+);
 
 const DocumentSchema = new mongoose.Schema(
   {
@@ -17,6 +25,7 @@ const DocumentSchema = new mongoose.Schema(
     relations: { type: RelationsSchema, required: true },
     signers: { type: SignersSchema, required: true },
     status: { type: String, default: "pending" },
+    downloadUrl: { type: String, required: true },
   },
   {
     timestamps: true,
