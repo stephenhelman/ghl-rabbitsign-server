@@ -19,15 +19,6 @@ const { renderSummary } = require("../utils/summaryUtil");
  * 4. Store folder mapping in Mongo
  */
 
-// after: const ctx = buildCtxFromMapping(raw, templateConfig.ctxMapping);
-
-if (ctx.deal && ctx.deal.sellerConsiderations) {
-  ctx.deal.notesChunks = splitIntoLines(
-    ctx.deal.sellerConsiderations,
-    120, // max chars per line – tweak per template if needed
-    4 // number of lines/fields you have in RabbitSign
-  );
-}
 const prefillController = async (req, res, next) => {
   try {
     const tenant = req.tenant;
