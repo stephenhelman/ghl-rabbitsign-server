@@ -12,18 +12,17 @@ const updateOpportunityStage = async (tenant, opportunityId, stageId) => {
       pipelineStageId: stageId,
     }
   );
-  console.log(resp);
 
   console.log("GHL Response", {
-    path,
     status: resp.status,
     ok: resp.ok,
-    data,
+    data: resp,
   });
 
   return {
     ok: resp.ok,
     status: resp.status,
+    data: resp,
   };
 };
 
