@@ -1,4 +1,29 @@
-// utils/mapping.util.js
+const splitIntoLines = (text, maxLen = 120, lines = 4) => {
+  if (!text || typeof text !== "string") return Array(lines).fill("");
+
+  const words = text.trim().split(/\s+/);
+  const result = [];
+  let current = "";
+
+  for (const w of words) {
+    if ((current + " " + w).trim().length > maxLen) {
+      result.push(current.trim());
+      current = w;
+      if (result.length === lines) break;
+    } else {
+      current += " " + w;
+    }
+  }
+
+  if (result.length < lines) result.push(current.trim());
+
+  // Ensure exactly N lines
+  while (result.length < lines) result.push("");
+  if (result.length > lines) result.length = lines;
+
+  return result;
+};
+
 const { getByPath, setByPath } = require("./pathUtil");
 
 const buildCtxFromMapping = (raw, ctxMappingArray, date) => {
@@ -78,6 +103,7 @@ const buildSignersObject = (contact, role) => {
 };
 
 module.exports = {
+  splitIntoLines,
   getValueByPath,
   buildSenderFieldValues,
   buildRolesFromConfig,

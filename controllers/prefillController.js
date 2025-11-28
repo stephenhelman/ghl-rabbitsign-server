@@ -6,6 +6,7 @@ const {
   buildRolesFromConfig,
   buildSignersObject,
   buildCtxFromMapping,
+  splitIntoLines,
 } = require("../utils/mappingUtil");
 const { renderTitle } = require("../utils/titleUtil");
 const { renderSummary } = require("../utils/summaryUtil");
@@ -17,6 +18,16 @@ const { renderSummary } = require("../utils/summaryUtil");
  * 3. Call RabbitSign to create folder
  * 4. Store folder mapping in Mongo
  */
+
+// after: const ctx = buildCtxFromMapping(raw, templateConfig.ctxMapping);
+
+if (ctx.deal && ctx.deal.sellerConsiderations) {
+  ctx.deal.notesChunks = splitIntoLines(
+    ctx.deal.sellerConsiderations,
+    120, // max chars per line – tweak per template if needed
+    4 // number of lines/fields you have in RabbitSign
+  );
+}
 const prefillController = async (req, res, next) => {
   try {
     const tenant = req.tenant;
@@ -43,6 +54,13 @@ const prefillController = async (req, res, next) => {
     )}-${String(now.getDate()).padStart(2, "0")}`;
 
     const ctx = buildCtxFromMapping(req.body, templateConfig.ctxMapping, date);
+    if (ctx.deal && ctx.deal.additionalTerms) {
+      ctx.deal.notesChunks = splitIntoLines(
+        ctx.deal.additionalTerms,
+        120, // max chars per line – tweak per template if needed
+        4 // number of lines/fields you have in RabbitSign
+      );
+    }
 
     const rabbitPayload = {
       title: renderTitle(contractType, ctx.property),
@@ -51,7 +69,6 @@ const prefillController = async (req, res, next) => {
       senderFieldValues: buildSenderFieldValues(templateConfig, ctx),
       roles: buildRolesFromConfig(templateConfig, ctx),
     };
-    console.log(rabbitPayload);
 
     // 3) Call RabbitSign to create folder
     const rabbitResp = await rabbitsignService.createFolderFromTemplate(
