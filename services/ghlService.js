@@ -12,7 +12,7 @@ const updateOpportunityStage = async (tenant, opportunityId, stageId) => {
       pipelineStageId: stageId,
     }
   );
-  const data = await resp.json().catch((err) => ("GHL API Error", err));
+  console.log(resp);
 
   console.log("GHL Response", {
     path,
@@ -24,7 +24,6 @@ const updateOpportunityStage = async (tenant, opportunityId, stageId) => {
   return {
     ok: resp.ok,
     status: resp.status,
-    data,
   };
 };
 

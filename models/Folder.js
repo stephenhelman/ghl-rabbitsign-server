@@ -3,12 +3,17 @@
 //used to interact with rabbitsign and ghl
 const mongoose = require("mongoose");
 
-const SignerSchema = new mongoose.Schema({
-  role: { type: String, required: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  contactId: { type: String },
-});
+const SignerSchema = new mongoose.Schema(
+  {
+    role: { type: String, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    contactId: { type: String },
+  },
+  {
+    _id: false,
+  }
+);
 
 const FolderSchema = new mongoose.Schema(
   {

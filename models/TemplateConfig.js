@@ -9,10 +9,13 @@ const SenderFieldMapSchema = new mongoose.Schema(
   { _id: false }
 );
 
-const CtxMappingEntrySchema = new mongoose.Schema({
-  ctxPath: { type: String, required: true },
-  ghlPath: { type: String, required: true },
-});
+const CtxMappingEntrySchema = new mongoose.Schema(
+  {
+    ctxPath: { type: String, required: true },
+    ghlPath: { type: String, required: true },
+  },
+  { _id: false }
+);
 
 const SignerSchema = new mongoose.Schema(
   {

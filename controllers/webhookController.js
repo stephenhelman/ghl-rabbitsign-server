@@ -44,6 +44,11 @@ const rabbitsignWebhookController = async (req, res, next) => {
         folder.opportunityId,
         tenant.stageIds.sellerSigned
       );
+
+      return res.status(200).json({
+        ok: true,
+        data: ghlResponse,
+      });
     }
 
     //if signer email (webhook payload) === buyer.email( folder details) => move to dispo => create signed doc => relate signed doc to contact and opp => upload pdf to signed doc
@@ -53,6 +58,10 @@ const rabbitsignWebhookController = async (req, res, next) => {
         folder.opportunityId,
         tenant.stageIds.fullySigned
       );
+      return res.status(200).json({
+        ok: true,
+        data: ghlResponse,
+      });
       //create a Document with necessary information
       const documentResponse = await documentService.createDocumentRecord({
         tenantId,
