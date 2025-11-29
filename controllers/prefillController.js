@@ -53,6 +53,8 @@ const prefillController = async (req, res, next) => {
       );
     }
 
+    console.log(ctx);
+
     const rabbitPayload = {
       title: renderTitle(contractType, ctx.property),
       summary: renderSummary(templateConfig, ctx.property),
