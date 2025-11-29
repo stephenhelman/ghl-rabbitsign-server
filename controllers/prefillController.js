@@ -61,6 +61,8 @@ const prefillController = async (req, res, next) => {
       roles: buildRolesFromConfig(templateConfig, ctx),
     };
 
+    console.log(rabbitPayload);
+
     // 3) Call RabbitSign to create folder
     const rabbitResp = await rabbitsignService.createFolderFromTemplate(
       tenant,
