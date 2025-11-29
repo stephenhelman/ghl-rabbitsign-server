@@ -12,7 +12,7 @@ const tenantMiddleware = async (req, res, next) => {
     }
 
     const tenantFromDB = await tenantService.getTenantById(tenantId);
-    const tenant = tenantFromDB[0];
+    const tenant = tenantFromDB.filter((tenant) => tenant._id === tenantId)[0];
     if (!tenant) {
       return res.status(404).json({
         ok: false,

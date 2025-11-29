@@ -49,7 +49,7 @@ const prefillController = async (req, res, next) => {
       ctx.deal.notesChunks = splitIntoLines(
         ctx.deal.additionalTerms,
         120, // max chars per line – tweak per template if needed
-        4 // number of lines/fields you have in RabbitSign
+        5 // number of lines/fields you have in RabbitSign
       );
     }
 

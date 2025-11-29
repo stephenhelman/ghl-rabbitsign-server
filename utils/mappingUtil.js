@@ -1,3 +1,5 @@
+const { getByPath, setByPath } = require("./pathUtil");
+
 const splitIntoLines = (text, maxLen = 120, lines = 4) => {
   if (!text || typeof text !== "string") return Array(lines).fill("");
 
@@ -23,8 +25,6 @@ const splitIntoLines = (text, maxLen = 120, lines = 4) => {
 
   return result;
 };
-
-const { getByPath, setByPath } = require("./pathUtil");
 
 const buildCtxFromMapping = (raw, ctxMappingArray, date) => {
   const ctx = {};
