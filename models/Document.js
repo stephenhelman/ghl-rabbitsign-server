@@ -21,11 +21,11 @@ const SignersSchema = new mongoose.Schema(
 const DocumentSchema = new mongoose.Schema(
   {
     tenantId: { type: String, ref: "Tenant", required: true },
+    name: { type: String, required: true },
     folderId: { type: String, ref: "Folder", required: true },
     relations: { type: RelationsSchema, required: true },
     signers: { type: SignersSchema, required: true },
     status: { type: String, default: "pending" },
-    downloadUrl: { type: String, required: true },
   },
   {
     timestamps: true,
@@ -34,7 +34,7 @@ const DocumentSchema = new mongoose.Schema(
 );
 
 DocumentSchema.index({ tenantId: 1, folderId: 1 });
-DocumentSchema.index({ tenantId: 1, ghlContactId: 1 });
+DocumentSchema.index({ tenantId: 1, "relations.contactId": 1 });
 
 const Document = mongoose.model("Document", DocumentSchema);
 

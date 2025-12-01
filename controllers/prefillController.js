@@ -52,18 +52,15 @@ const prefillController = async (req, res, next) => {
         5 // number of lines/fields you have in RabbitSign
       );
     }
-
-    console.log(ctx);
+    const title = renderTitle(contractType, ctx.property);
 
     const rabbitPayload = {
-      title: renderTitle(contractType, ctx.property),
+      title: title,
       summary: renderSummary(templateConfig, ctx.property),
       date: date,
       senderFieldValues: buildSenderFieldValues(templateConfig, ctx),
       roles: buildRolesFromConfig(templateConfig, ctx),
     };
-
-    console.log(rabbitPayload);
 
     // 3) Call RabbitSign to create folder
     const rabbitResp = await rabbitsignService.createFolderFromTemplate(
@@ -89,6 +86,7 @@ const prefillController = async (req, res, next) => {
     // 4) Save folder record in Mongo
     await folderService.createFolderRecord(folderId, {
       tenantId,
+      name: title,
       opportunityId: ctx.opportunityId,
       signers,
     });

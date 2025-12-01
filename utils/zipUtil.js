@@ -1,17 +1,20 @@
-//unzip + extract PDFs
-// backend/src/utils/zip.util.js
+// backend/src/utils/zipUtil.js (rename to match the import)
 const { unzipSync } = require("fflate");
 
 /**
- * Given a ZIP file as Uint8Array, extract all PDFs inside.
+ * Given a ZIP file as Uint8Array or Buffer, extract all PDFs.
  * Returns array of { filename, bytes }.
  */
 const extractPdfsFromZip = (zipBytes) => {
   if (!zipBytes) {
-    throw new Error("extractPdfsFromZip expects a Uint8Array");
+    throw new Error("extractPdfsFromZip expects bytes (Uint8Array or Buffer)");
   }
 
-  const entries = unzipSync(zipBytes); // { "path/to/file.pdf": Uint8Array, ... }
+  // Ensure Uint8Array for fflate
+  const bytes =
+    zipBytes instanceof Uint8Array ? zipBytes : new Uint8Array(zipBytes);
+
+  const entries = unzipSync(bytes); // { "path/to/file.pdf": Uint8Array, ... }
   const pdfs = [];
 
   Object.keys(entries).forEach((name) => {
@@ -28,31 +31,16 @@ const extractPdfsFromZip = (zipBytes) => {
 
 /**
  * Convenience helper: get the "best" / first PDF from a ZIP.
- * - If there's exactly one, return it.
- * - If multiple, pick the one with the longest filename (tweak if needed).
+ * Currently: return the first PDF found.
  */
 const extractFirstPdfFromZip = (zipBytes) => {
   const pdfs = extractPdfsFromZip(zipBytes);
 
-  if (pdfs.length === 0) {
-    throw new Error("No PDF files found in ZIP archive");
+  if (!pdfs.length) {
+    throw new Error("No PDFs found inside RabbitSign ZIP");
   }
 
-  if (pdfs.length === 1) {
-    return pdfs[0];
-  }
-
-  const best = pdfs.reduce((acc, curr) =>
-    curr.filename.length > acc.filename.length ? curr : acc
-  );
-
-  // eslint-disable-next-line no-console
-  console.log("Multiple PDFs found in ZIP, choosing:", {
-    count: pdfs.length,
-    chosen: best.filename,
-  });
-
-  return best;
+  return pdfs[0]; // { filename, bytes }
 };
 
 module.exports = {
