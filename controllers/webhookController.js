@@ -45,32 +45,51 @@ const rabbitsignWebhookController = async (req, res, next) => {
         tenant.stageIds.sellerSigned
       );
 
+      //if request to GHL was bad
+      if (ghlResponse.statusCode) {
+        return res.status(ghlResponse.statusCode).json({
+          message: ghlResponse.message,
+          error: ghlResponse.error || "Bad Request",
+        });
+      }
+
       return res.status(200).json({
         ok: true,
         data: ghlResponse,
       });
     }
 
-    //if signer email (webhook payload) === buyer.email( folder details) => move to dispo => create signed doc => relate signed doc to contact and opp => upload pdf to signed doc
+    //if signer email (webhook payload) === buyer.email( folder details) => move to dispo => create doc in database
     if (payload.signerEmail === folder.signers[1].email) {
       const ghlResponse = await ghlService.updateOpportunityStage(
         tenant,
         folder.opportunityId,
         tenant.stageIds.fullySigned
       );
-      return res.status(200).json({
-        ok: true,
-        data: ghlResponse,
-      });
+
+      //if request to GHL was bad
+      if (ghlResponse.statusCode) {
+        return res.status(ghlResponse.statusCode).json({
+          message: ghlResponse.message,
+          error: ghlResponse.error || "Bad Request",
+        });
+      }
+
       //create a Document with necessary information
       const documentResponse = await documentService.createDocumentRecord({
         tenantId,
         folderId,
+        name: folder.name,
         relations: {
-          contactId: folder.signers[0].contactId,
-          opportunityId: ghlResponse.data.id,
+          contactId: ghlResponse.data.opportunity.contact.id,
+          opportunityId: ghlResponse.data.opportunity.id,
+        },
+        signers: {
+          seller: folder.signers[0].name,
+          buyer: folder.signers[1].name,
         },
       });
+      return res.status(200).json({ data: documentResponse });
     }
     // eslint-disable-next-line no-console
     console.log("[webhook] Rabbitsign payload received", {

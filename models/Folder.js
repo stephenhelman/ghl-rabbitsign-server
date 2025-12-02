@@ -8,7 +8,6 @@ const SignerSchema = new mongoose.Schema(
     role: { type: String, required: true },
     name: { type: String, required: true },
     email: { type: String, required: true },
-    contactId: { type: String },
   },
   {
     _id: false,
@@ -18,6 +17,8 @@ const SignerSchema = new mongoose.Schema(
 const FolderSchema = new mongoose.Schema(
   {
     _id: { type: String, required: true }, // RabbitSign folderId
+
+    name: { type: String, required: true },
 
     tenantId: { type: String, ref: "Tenant", required: true },
 

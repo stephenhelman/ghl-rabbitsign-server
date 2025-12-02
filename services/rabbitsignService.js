@@ -42,12 +42,12 @@ const rabbitSignAPI = async (tenant, { method, path, body = null }) => {
   const resp = await fetch(url, fetchOptions);
   const data = await resp.json().catch((err) => ("rabbit sign API error", err));
 
-  console.log("Rabbit Sign folder details", {
+  /*   console.log("Rabbit Sign folder details", {
     path,
     status: resp.status,
     ok: resp.ok,
     data,
-  });
+  }); */
 
   return {
     ok: resp.ok,
