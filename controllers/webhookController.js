@@ -42,7 +42,8 @@ const rabbitsignWebhookController = async (req, res, next) => {
       const ghlResponse = await ghlService.updateOpportunityStage(
         tenant,
         folder.opportunityId,
-        tenant.stageIds.sellerSigned
+        tenant.stageIds.sellerSigned,
+        folderId
       );
 
       //if request to GHL was bad
@@ -64,7 +65,8 @@ const rabbitsignWebhookController = async (req, res, next) => {
       const ghlResponse = await ghlService.updateOpportunityStage(
         tenant,
         folder.opportunityId,
-        tenant.stageIds.fullySigned
+        tenant.stageIds.fullySigned,
+        folderId
       );
 
       //if request to GHL was bad
