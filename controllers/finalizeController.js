@@ -45,6 +45,8 @@ const finalizeController = async (req, res, next) => {
     opportunityId,
     signedDocId
   );
+
+  return res.status(201).json({ message: "All items complete" });
 };
 
 module.exports = { finalizeController };
